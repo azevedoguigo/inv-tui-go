@@ -17,7 +17,7 @@ type Item struct {
 
 var (
 	inventory     = []Item{}
-	inventoryFile = "inventory.json"
+	inventoryFile = "/etc/inv-tui-go/inventory.json"
 )
 
 func loadInventory() {
