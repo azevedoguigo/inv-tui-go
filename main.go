@@ -73,9 +73,21 @@ func main() {
 	itemStockInput := tview.NewInputField().SetLabel("Stock: ")
 	itemIDInput := tview.NewInputField().SetLabel("Item ID to delete: ")
 
-	form := tview.NewForm().
-		AddFormItem(itemNameInput).
-		AddFormItem(itemStockInput).
+	form := tview.NewForm()
+	flex := tview.NewFlex()
+
+	modal := tview.NewModal().
+		SetText("Do you want to quit the application?").
+		AddButtons([]string{"Cancel", "Quit"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "Quit" {
+				app.Stop()
+			} else {
+				app.SetRoot(flex, true).SetFocus(form)
+			}
+		})
+
+	form.AddFormItem(itemNameInput).AddFormItem(itemStockInput).
 		AddFormItem(itemIDInput).
 		AddButton("Add Item", func() {
 			name := itemNameInput.GetText()
@@ -110,14 +122,12 @@ func main() {
 			itemIDInput.SetText("")
 		}).
 		AddButton("Exit", func() {
-			app.Stop()
+			app.SetRoot(modal, true).SetFocus(modal)
 		})
 
 	form.SetBorder(true).SetTitle("Manage Inventory").SetTitleAlign(tview.AlignLeft)
 
-	flex := tview.NewFlex().
-		AddItem(inventoryList, 0, 1, false).
-		AddItem(form, 0, 1, true)
+	flex.AddItem(inventoryList, 0, 1, false).AddItem(form, 0, 1, true)
 
 	refreshInventory()
 
