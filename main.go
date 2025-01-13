@@ -121,7 +121,8 @@ func main() {
 
 	refreshInventory()
 
-	if err := app.SetRoot(flex, true).Run(); err != nil {
+	err := app.SetRoot(flex, true).EnableMouse(true).Run()
+	if err != nil {
 		panic(err)
 	}
 }
